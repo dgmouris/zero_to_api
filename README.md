@@ -65,7 +65,7 @@
         - go into your project folder. Let's see if we can run django! in your terminal run
             - python manage.py runserver
         - now if you look at your terminal you will see something like the following:
-            show picture zero_to_api_apply_migrations.png
+            show picture ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_apply_migrations.png)
         - what this means is that django wants to make some stuff in our database and we also want it to do that!
         - running migrations (a simplified overview for our talk.)
             - python manage.py makemigrations
@@ -94,7 +94,7 @@
 
             - now if you go back to your terminal and run your local server (python manage.py runserver)
                 - you should see something similar to the first time.
-                    - show picture zero_to_api_apply_migrations_2.png
+                    - show picture ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_apply_migrations_2.png)
 
             - let's run our migrations again so that we can apply the changes to the database!
                 - python manage.py makemigrations
@@ -112,14 +112,14 @@
     - Exploring endpoints and adding a user.
         - Let's run our server now (python manage.py runserver)
         - if you go to localhost:8000 you'll get a 404
-            - shown here zero_to_api_404_with_endpoints.png
+            - shown here ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_404_with_endpoints.png)
         - this is not a bad thing. this is a good thing, let's go explore them.
             - http://localhost:8000/admin/
                 - but I can't login! what's going on! oh my god dan has such cute cats and I can't concentrate!
                 - we'll deal with this very soon.
             - http://localhost:8000/rest-auth/
                 - there are a lot of options here, shown here:
-                    zero_to_api_404_with_rest_auth_endpoints.png
+                    ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_404_with_rest_auth_endpoints.png)
                 - these are all of the endpoints that the restauth (the login api part to our website to work.)
                 - but we have to do a few more things to get this to work.
         - let's add our first user (yourself)
@@ -143,7 +143,7 @@
             5. press send, and you should see the key!
 
         - the picture you should see is below.
-            zero_to_api_arc_test_api_1.png
+            ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_test_api_1.png)
 
         - What this key is used for is to login your user.
 
@@ -164,21 +164,21 @@
                 - Cat Types
                 - Cats
             - Here's what the models are going to look like.
-                zero_to_api_cats_models.png
+                ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_models.png)
 
         - Let's do the "makemigrations" because we've made changes to our own app that we've created with the following command
             - python manage.py makemigrations
                 - the output should look something like this:
-                    zero_to_api_cats_make_migrations.png
+                    ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_make_migrations.png)
 
         - If that was successful then we can apply our migrations with the following command
             - python manage.py migrate
                 - the output should look something like below
-                    zero_to_api_cats_apply_migrate.png
+                    ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_apply_migrate.png)
 
         - Now that we have tables in our database, let's add them to the admin project so that we can add some data
             - go to the admin.py in your cats folder and modify it like the following picture.
-                zero_to_api_cats_admin.png
+                ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_admin.png)
             - now go back and run your server and login to the admin page (http://localhost:8000/admin/)
                 - you should see "Cat" and "CatType" models included.
 
@@ -194,7 +194,7 @@
             - this is going to serialize our data, I'm not going to go into this in depth, but you can think of them as something that allows you have the functionality to modify your models, as well as get data from them via an api.
                 - for more information go to http://www.django-rest-framework.org/api-guide/serializers/
             - our serializers are going to look like the following and are going to use the ModelSerializer, they look like this.
-                zero_to_api_cats_serializers.png
+                ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_serializers.png)
 
         - now that we have to create viewsets, in the django rest framework documentation they define it as follows.
             "ViewSet classes are almost the same thing as View classes, except that they provide operations such as read, or update, and not method handlers such as get or put."
@@ -210,7 +210,7 @@
             - create a urls.py file in your cats folder.
             - now we're going to include a router which is a bit like urls in django, this adds our viewsets to a url path.
             - it should look like this
-                zero_to_api_cats_urls.png
+                ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_urls.png)
 
         - Now that we have our urls defined in our app we have to add it to the overall web project.
             - it's one line of code in the zero_to_api/urls.py file. the line is:
@@ -236,7 +236,7 @@
                 }
             - this will also allow us post as well as give us functionality private.
             - now if you look at the following picture you should be able to add a new cat! via an api (using arc)
-                zero_to_api_arc_create.png
+                ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_create.png)
 
         - Let's make our api Private!
            - we don't really care if people can see our cat types, but we don't want people to know our cat names!
@@ -244,19 +244,19 @@
            - in your viewsets.py file you need to "include permissions" add the following line if you don't want to make it public
             permission_classes = [permissions.IsAuthenticated]
                 - this should look like
-                    zero_to_api_cats_viewsets_with_authentication.png
+                    ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_viewsets_with_authentication.png)
             - now if you go to http://localhost:8000/api/v1/cats/ it'll show you that you don't have any credentials, and won't permit you yay!
 
         - I want to access my private stuff!
             - go to your advanced rest client, use the "POST" method and put in the login url (http://localhost:8000/rest-auth/login)
             - put in your credentials in the body (like we did the first time) and copy the key somewhere handy so you can copy it.
-                if you need a refresher see: zero_to_api_arc_test_api_1.png
+                if you need a refresher see: ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_test_api_1.png)
             - now we're going to access our stuff via token authentication!
             - Use the "GET" method and enter the url "http://localhost:8000/api/v1/cats/"
             - in your advanced rest client select the "Headers" section
                 - in the header name enter "Authorizations"
                 - in the header value enter "Token <your-super-private-key>"
-            - it should look like the following: zero_to_api_arc_get_authenticated.png
+            - it should look like the following: ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_get_authenticated.png)
 
        - Conclusions
            - What have we done here?
