@@ -9,6 +9,16 @@ Creating an authenticated api from scratch, with django, django rest framework, 
 - some basic knowledge of django, but I'll try to fill in the gaps.
 - I'm going to do this all in Ubuntu 16.04, so instructions will be a bit different but similar for mac and windows.
 
+## if you want to follow along while I present (or look at this afterwards)
+1. do a git clone of the repository
+`git clone https://github.com/dgmouris/zero_to_api.git`
+2. initialize your virtualenv with the following command
+`pipenv shell --python=2`
+3. install all the packages
+`pipenv install`
+4. try not to jeer me as I talk :)
+
+
 ## What are we going to do?
 - talk about restful apis
 
