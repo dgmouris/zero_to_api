@@ -1,0 +1,15 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+*.egg-info/
+.cache/
+.eggs/
+
+# Django specific files
+*.log
+
+#db
+
+*db.sqlite3
