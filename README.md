@@ -176,7 +176,7 @@ Creating an authenticated api from scratch, with django, django rest framework, 
             'cats'
             ```
 
-
+## Creating some models
 - Now let's first add your models in the models.py in your cats folder (or what ever your created.)
     - models are like tables in your database that you can manipulate with python.
     - We're going to create two models and add them.
@@ -185,6 +185,7 @@ Creating an authenticated api from scratch, with django, django rest framework, 
     - Here's what the models are going to look like.
         ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_models.png)
 
+## Let's talk about migrations
 - Let's do the "makemigrations" because we've made changes to our own app that we've created with the following command
     - python manage.py makemigrations
         - the output should look something like this:
@@ -208,13 +209,16 @@ Creating an authenticated api from scratch, with django, django rest framework, 
     - So let's create one.
 
 ## Let's create our restful api!
+- let's make it accessible!s
 
+## let's make some serializers
 - In your cats Folder we're going to create a serializers.py file.
     - this is going to serialize our data, I'm not going to go into this in depth, but you can think of them as something that allows you have the functionality to modify your models, as well as get data from them via an api.
         - for more information go to http://www.django-rest-framework.org/api-guide/serializers/
     - our serializers are going to look like the following and are going to use the ModelSerializer, they look like this.
         ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_serializers.png)
 
+## let's make some viewsets
 - now that we have to create viewsets, in the django rest framework documentation they define it as follows.
     "ViewSet classes are almost the same thing as View classes, except that they provide operations such as read, or update, and not method handlers such as get or put."
     http://www.django-rest-framework.org/api-guide/viewsets/
@@ -224,6 +228,7 @@ Creating an authenticated api from scratch, with django, django rest framework, 
         - your serializer.
     - your serializers will end up looking like the following if you look at the documentation:
 
+## let's hook it up to the urls with the django rest framework "router"
 - Let's hook it up to our urls so that we can use it!
     - this is going to be similar to what we did with django-restauth, but this is going to be all our stuff!
     - create a urls.py file in your cats folder.
@@ -238,16 +243,17 @@ Creating an authenticated api from scratch, with django, django rest framework, 
             ```
     - this just connects it like we did to django-restauth earlier
 
-- What did I just do?
-    - run your localserver and go to the following destinations in your browser you should see something crazy cool!
-        http://localhost:8000/api/v1/cats/
-        http://localhost:8000/api/v1/cat-types/
-    - Congratulations you just created your first api!
+## What did I just do?
+- run your localserver and go to the following destinations in your browser you should see something crazy cool!
+    http://localhost:8000/api/v1/cats/
+    http://localhost:8000/api/v1/cat-types/
+- Congratulations you just created your first api!
 
-- But wait there's more!
-    - Can we access this from our "Advanced Rest Client"?
-    - Yes But only with the GET Method!
+## But wait there's more!
+- Can we access this from our "Advanced Rest Client"?
+- Yes But only with the GET Method!
 
+## Enable the api for the "POST" method
 - Let's enable this for the post method so that we can add something.
     - we need to enable token authorization so that we can post! or else we're going to get some csrf failure.
     - you need to add the following lines to your zero_to_api/settings.py file.
@@ -261,27 +267,28 @@ Creating an authenticated api from scratch, with django, django rest framework, 
     - now if you look at the following picture you should be able to add a new cat! via an api (using arc)
         ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_create.png)
 
-- Let's make our api Private!
-   - we don't really care if people can see our cat types, but we don't want people to know our cat names!
-   - let's make the cat types public, but let's make the cats private, where you need to login.
-   - in your viewsets.py file you need to "include permissions" add the following line if you don't want to make it public
-    ```
-    permission_classes = [permissions.IsAuthenticated]
-    ```
-        - this should look like
-            ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_viewsets_with_authentication.png)
-    - now if you go to http://localhost:8000/api/v1/cats/ it'll show you that you don't have any credentials, and won't permit you yay!
 
-- I want to access my private stuff!
-    - go to your advanced rest client, use the "POST" method and put in the login url (http://localhost:8000/rest-auth/login)
-    - put in your credentials in the body (like we did the first time) and copy the key somewhere handy so you can copy it.
-        if you need a refresher see: ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_test_api_1.png)
-    - now we're going to access our stuff via token authentication!
-    - Use the "GET" method and enter the url "http://localhost:8000/api/v1/cats/"
-    - in your advanced rest client select the "Headers" section
-        - in the header name enter "Authorizations"
-        - in the header value enter "Token <your-super-private-key>"
-    - it should look like the following: ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_get_authenticated.png)
+## Let's make our api Private!
+- we don't really care if people can see our cat types, but we don't want people to know our cat names!
+- let's make the cat types public, but let's make the cats private, where you need to login.
+- in your viewsets.py file you need to "include permissions" add the following line if you don't want to make it public
+```
+permission_classes = [permissions.IsAuthenticated]
+```
+    - this should look like
+        ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_viewsets_with_authentication.png)
+- now if you go to http://localhost:8000/api/v1/cats/ it'll show you that you don't have any credentials, and won't permit you yay!
+
+## I want to access my private stuff!
+- go to your advanced rest client, use the "POST" method and put in the login url (http://localhost:8000/rest-auth/login)
+- put in your credentials in the body (like we did the first time) and copy the key somewhere handy so you can copy it.
+    if you need a refresher see: ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_test_api_1.png)
+- now we're going to access our stuff via token authentication!
+- Use the "GET" method and enter the url "http://localhost:8000/api/v1/cats/"
+- in your advanced rest client select the "Headers" section
+    - in the header name enter "Authorizations"
+    - in the header value enter "Token <your-super-private-key>"
+- it should look like the following: ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_get_authenticated.png)
 
 ## Conclusions
 - What have we done here?
@@ -294,4 +301,5 @@ Creating an authenticated api from scratch, with django, django rest framework, 
 - Feel free to use this, I hope it was helpful.
 - If you liked this talk/tutorial and you want to help me, star the repo, and if you're a connection on linkedin endorse me for python.
 
-- Success you've reated your first app so now go conquer the world! Apps, Websites, IOT, and what ever else you want to do!
+## Success, Congratulations you're awesome!
+- you've reated your first app so now go conquer the world! Apps, Websites, IOT, and what ever else you want to do!
