@@ -20,7 +20,8 @@ Creating an authenticated api from scratch, with django, django rest framework, 
    - create an api for the app above and hook it up to our web project.
 
 ## What is a restful api, and who uses it, what does their dad do?
-![alt text](https://www.youtube.com/watch?v=7YcW25PHnAA)
+
+[![A video about restful apis.](http://img.youtube.com/vi/7YcW25PHnAA/0.jpg)](https://www.youtube.com/watch?v=7YcW25PHnAA&t=1s)
 
 - Used by mobile apps, web, iot devices and has lot of applications otherwise.
 - I don't know what its' dad does.
