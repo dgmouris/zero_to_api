@@ -56,7 +56,7 @@ Creating an authenticated api from scratch, with django, django rest framework, 
     - `pipenv install django`
         - this is going to install the latest version of django.
 - Django rest framework installation
-    - `pipenv install django-restframework`
+    - `pipenv install djangorestframework`
         - latest version.
 - django allauth
     - `pipenv install django-allauth`
