@@ -3,7 +3,7 @@
 Creating an authenticated api from scratch, with django, django rest framework, and django rest auth.
 
 ## Prerequistes to follow the presentation
-- pipenv and installation of python 2.7+ (I screwed my virtualenv while making this and made it for 2.7)
+- pipenv and installation of python 3.6+ 
 - a restful testing program (you can download chrome extentions: postman or i like advanced rest client or other ones)
 - git (if you want to clone the repo later.)
 - some basic knowledge of django, but I'll try to fill in the gaps.
@@ -24,25 +24,29 @@ Creating an authenticated api from scratch, with django, django rest framework, 
 
 - the full shabang of building our api below.
    - create a django project
-   - add the djangorestframework, django-restauth packages
+   - add the djangorestframework and djoser packages
    - hook up the authentication api and configure it to our web project.
    - create an app with models (and add them to the admin), serializers, views, urls,
    - create an api for the app above and hook it up to our web project.
+- If we have time
+   - Deploy to heroku.
+   - Add a lot of data from a 
 
-## What is a restful api, and who uses it, what does their dad do?
+## What is a restful api, and who uses it?
 
 [![A video about restful apis.](http://img.youtube.com/vi/7YcW25PHnAA/0.jpg)](https://www.youtube.com/watch?v=7YcW25PHnAA&t=1s)
 
-- Used by mobile apps, web, iot devices and has lot of applications otherwise.
-- I don't know what its' dad does.
+- Used by mobile apps, all website you go to, iot devices and much more!
+- Used by data scientists (and machine learning) professionals to get their data.
+
 
 ## What are the packages we're going to use and why are we going to use them.
 - we're going to be creating the api using the following packages:
-    - Django
+    - (Django)[https://www.djangoproject.com/]
         - this is a web framework and an orm (Object Relationship Mapper) Basically just an sql interface
-    - Django Rest Framework
+    - (Django Rest Framework)[https://www.django-rest-framework.org/]
         - this is going to allow us to really simplify the api creation process
-    - Django rest-auth (paired with allauth)
+    - (Djoser)[https://djoser.readthedocs.io/en/latest/getting_started.html]
         - this is going to handle our registration (through the api) as well as login.
 
 ## Creating your environment
@@ -51,6 +55,7 @@ Creating an authenticated api from scratch, with django, django rest framework, 
 - I used `pipenv shell` to create a virtualenvironment which allows us to isolate packages to this project.
 - you should see your virtual environment on the left hand side of your terminal
 
+
 ## Installing the packages.
 - Django installation:
     - `pipenv install django`
@@ -58,8 +63,8 @@ Creating an authenticated api from scratch, with django, django rest framework, 
 - Django rest framework installation
     - `pipenv install djangorestframework`
         - latest version.
-- django allauth
-    - `pipenv install django-allauth`
+- django djoser
+    - `pipenv install djoser`
 
 - django rest auth installation
     - `pipenv install django-rest-auth`
