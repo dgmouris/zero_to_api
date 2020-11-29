@@ -7,13 +7,20 @@ Creating an authenticated api from scratch, with django, django rest framework, 
 - a restful testing program (you can download chrome extentions: postman or i like advanced rest client or other ones)
 - git (if you want to clone the repo later.)
 - some basic knowledge of django, but I'll try to fill in the gaps.
-- I'm going to do this all in Ubuntu 16.04, so instructions will be a bit different but similar for mac and windows.
+- I'm going to do this all in Ubuntu, so instructions will be a bit different but similar for mac and windows.
 
 ## if you want to follow along while I present (or look at this afterwards)
+
 1. do a git clone of the repository
 `git clone https://github.com/dgmouris/zero_to_api.git`
+
+- if you're using python virtualenvs
+### TODO ###
+
+
+- if you're using pipenv 
 2. initialize your virtualenv with the following command
-`pipenv shell --python=2`
+`pipenv shell --python=3.7`
 3. install all the packages
 `pipenv install`
 4. try not to jeer me as I talk :)
@@ -30,10 +37,13 @@ Creating an authenticated api from scratch, with django, django rest framework, 
    - create an api for the app above and hook it up to our web project.
 - If we have time
    - Deploy to heroku.
-   - Add a lot of data from a 
+   - Add a lot of data from an opendata platform using management commands.
 
 ## What is a restful api, and who uses it?
 
+A RESTful api is basically a way to transfer information from a server (where you store information and do tasks) to a client. A client can be a mobile app, a website (loaded on your computer), games that store high scores or anything that will "consume" information.
+
+- If you want more information on this you take a look here.
 [![A video about restful apis.](http://img.youtube.com/vi/7YcW25PHnAA/0.jpg)](https://www.youtube.com/watch?v=7YcW25PHnAA&t=1s)
 
 - Used by mobile apps, all website you go to, iot devices and much more!
@@ -42,11 +52,11 @@ Creating an authenticated api from scratch, with django, django rest framework, 
 
 ## What are the packages we're going to use and why are we going to use them.
 - we're going to be creating the api using the following packages:
-    - (Django)[https://www.djangoproject.com/]
+    - [Django](https://www.djangoproject.com)
         - this is a web framework and an orm (Object Relationship Mapper) Basically just an sql interface
-    - (Django Rest Framework)[https://www.django-rest-framework.org/]
+    - [Django Rest Framework](https://www.django-rest-framework.org/)
         - this is going to allow us to really simplify the api creation process
-    - (Djoser)[https://djoser.readthedocs.io/en/latest/getting_started.html]
+    - [Djoser](https://djoser.readthedocs.io/en/latest/getting_started.html)
         - this is going to handle our registration (through the api) as well as login.
 
 ## Creating your environment
