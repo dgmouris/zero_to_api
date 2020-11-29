@@ -127,14 +127,14 @@ A RESTful api is basically a way to transfer information from a server (where yo
 - first let's go to our settings.py
     - go to your `INSTALLED_APPS`, and let's add a couple.
         - add the following lines within the existing list.
-        ```python
+```python
         # my installed apps
         'django.contrib.auth',
         ...other packages ...
         'rest_framework',
         'rest_framework.authtoken',
         'djoser',
-        ```
+```
 
     - now if you go back to your terminal and run your local server (`python manage.py runserver`)
         - you should see something similar to the first time.
@@ -148,15 +148,15 @@ A RESTful api is basically a way to transfer information from a server (where yo
 
 ## Let's add the django-restauth login endpoints to our package.
 - urls.py package add the following line in the `urls_patterns list`
-    ```python
+```python
     path('v1/auth/', include('djoser.urls')),
     path('v1/auth/token/', views.obtain_auth_token)
-    ```python
+```python
     PS. at the top you'll have to include the word include in the following line to get it to work.
-    ```python
+```python
     from rest_framework.authtoken import views
     from django.urls import path, include
-    ```
+```
 
 - To be able to use this from your rest client you'll need specify the authentication classes that your project uses.
 ```python
@@ -217,9 +217,9 @@ REST_FRAMEWORK = {
 - let's add cats to our installed apps so that our website knows to use that part of the site:)
     - go to the zero_to_api folder in your project root.
         - in the settings.py `INSTALLED_APPS` list add the following lines.
-            ```python
+```python
             'cats'
-            ```
+```
 - What are apps?
     - Apps are essentially a piece of functionality for your site, django tries to keep different pieces of functionality separate from other pieces. Account, is different than cats.
 
@@ -230,7 +230,7 @@ REST_FRAMEWORK = {
         - Cat Types
         - Cats
     - Here's what the models are going to look like.
-    ```python
+```python
 from django.db import models
 
 class CatBreed(models.Model):
@@ -250,7 +250,7 @@ class Cat(models.Model):
         return F"{self.name}, {self.cat_breed}"
 
 
-    ```
+```
 
 ## Let's talk about migrations
 - Let's do the "makemigrations" because we've made changes to our own app that we've created with the following command
@@ -265,7 +265,7 @@ class Cat(models.Model):
 
 - Now that we have tables in our database, let's add them to the admin project so that we can add some data
     - go to the admin.py in your cats folder and modify it like the following picture.
-    ```python
+```python
 from django.contrib import admin
 
 from .models import Cat, CatBreed
@@ -273,7 +273,7 @@ from .models import Cat, CatBreed
 admin.site.register(Cat)
 admin.site.register(CatBreed)
 
-    ```
+```
     - now go back and run your server and login to the admin page (http://localhost:8000/admin/)
         - you should see "Cat" and "CatBreed" models included.
 
@@ -292,7 +292,7 @@ admin.site.register(CatBreed)
     - this is going to serialize our data, I'm not going to go into this in depth, but you can think of them as something that allows you have the functionality to modify your models, as well as get data from them via an api.
         - for more information go to http://www.django-rest-framework.org/api-guide/serializers/
     - our serializers are going to look like the following and are going to use the ModelSerializer, they look like this.
-    ```python
+```python
 from .models import Cat, CatBreed
 
 from rest_framework import serializers
@@ -306,7 +306,7 @@ class CatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cat
         fields = '__all__'
-    ```
+```
 
 ## let's make some viewsets
 - now that we have to create viewsets, in the django rest framework documentation they define it as follows.
@@ -317,7 +317,7 @@ class CatSerializer(serializers.ModelSerializer):
         - a queryset which you can think of the data that your viewset is going to use.
         - your serializer.
     - your serializers will end up looking like the following if you look at the documentation:
-        ```python
+```python
 from django.shortcuts import render
 from rest_framework import viewsets
 
@@ -332,7 +332,7 @@ class CatViewSet(viesets.ModelsViewSet);
     queryset = Cat.objects.all()
     serializer_class = CatSerializer
 
-        ```
+```
 
 
 ## let's hook it up to the urls with the django rest framework "router"
@@ -341,7 +341,7 @@ class CatViewSet(viesets.ModelsViewSet);
     - create a urls.py file in your cats folder.
     - now we're going to include a router which is a bit like urls in django, this adds our viewsets to a url path.
     - it should look like this
-    ```python
+```python
 from rest_framework import routers
 from .views import CatBreedViewSet, CatViewSet
 
@@ -350,13 +350,13 @@ router.register(r'cat-breeds', CatBreedViewSet)
 router.register(r'cats', CatViewSet)
 
 urlpatterns = router.urls
-    ```
+```
 
 - Now that we have our urls defined in our app we have to add it to the overall web project.
     - it's one line of code in the zero_to_api/urls.py file. the line is:
-    ```python
+```python
     path('api/v1/catapp', include('cats.urls')),
-    ```
+```
     - this just connects it like we did to django-restauth earlier
 
 ## What did I just do?
@@ -373,11 +373,11 @@ urlpatterns = router.urls
 - Let's enable this for the post method so that we can add something.
     - we need to enable token authorization so that we can post! or else we're going to get some csrf failure.
     - you need to add the following lines to your zero_to_api/settings.py file.
-     ```python
+```python
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
 }
-     ```
+```
     - this will also allow us post as well as give us functionality private.
     - now if you look at the following picture you should be able to add a new cat! via an api (using arc)
         ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_create.png)
