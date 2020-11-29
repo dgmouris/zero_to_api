@@ -4,7 +4,9 @@ Creating an authenticated api from scratch, with django, django rest framework, 
 
 ## Prerequistes to follow the presentation
 - pipenv and installation of python 3.6+ 
-- a restful testing program (you can download chrome extentions: postman or i like advanced rest client or other ones)
+- a restful testing program, this is going to act as our client (more on that soon):
+    - [Firefox rest client add on](https://addons.mozilla.org/en-CA/firefox/addon/restclient/)
+    - [Chrome rest client add on](https://chrome.google.com/webstore/detail/rest-ape-advanced-api-tes/ohalacbnhbfllngjcgnejjdgmhbkcnld?hl=en)
 - git (if you want to clone the repo later.)
 - some basic knowledge of django, but I'll try to fill in the gaps.
 - I'm going to do this all in Ubuntu, so instructions will be a bit different but similar for mac and windows.
@@ -36,8 +38,9 @@ Creating an authenticated api from scratch, with django, django rest framework, 
    - create an app with models (and add them to the admin), serializers, views, urls,
    - create an api for the app above and hook it up to our web project.
 - If we have time
+   - Add some javascript that can "consume" our api.
    - Deploy to heroku.
-   - Add a lot of data from an opendata platform using management commands.
+   - Add a lot of data from an (opendata platform)[https://www.kaggle.com/ma7555/cat-breeds-dataset] using management commands.
 
 ## What is a restful api, and who uses it?
 
@@ -76,8 +79,6 @@ A RESTful api is basically a way to transfer information from a server (where yo
 - django djoser
     - `pipenv install djoser`
 
-- django rest auth installation
-    - `pipenv install django-rest-auth`
 
 ## Starting a django project
 - django has a set of command line programs to help you set up your project.
@@ -92,7 +93,7 @@ A RESTful api is basically a way to transfer information from a server (where yo
             - this is a bit like `django-admin.py`, but more specific to your website.
         - a folder which has the same name as your project (zero_to_api) which contains the following files
             - urls.py
-                - this is going help us define our endpoints (ie. http://localhost:8000/rest-auth/login)
+                - this is going help us define our endpoints (ie. http://localhost:8000/rest-auth/login, but note we haven't created this yet.)
             - settings.py
                 - all of the static settings variables that are essential to our app.
                 - as well it defines the apps (parts of our website) that are going to be used.
@@ -126,11 +127,13 @@ A RESTful api is basically a way to transfer information from a server (where yo
 - first let's go to our settings.py
     - go to your `INSTALLED_APPS`, and let's add a couple.
         - add the following lines within the existing list.
-        ```
-            # my installed apps
-            'rest_framework',
-            'rest_framework.authtoken',
-            'rest_auth',
+        ```python
+        # my installed apps
+        'django.contrib.auth',
+        ...other packages ...
+        'rest_framework',
+        'rest_framework.authtoken',
+        'djoser',
         ```
 
     - now if you go back to your terminal and run your local server (`python manage.py runserver`)
@@ -145,11 +148,25 @@ A RESTful api is basically a way to transfer information from a server (where yo
 
 ## Let's add the django-restauth login endpoints to our package.
 - urls.py package add the following line in the `urls_patterns list`
-    ```
-    url(r'^rest-auth/', include('rest_auth.urls'))
-    ```
+    ```python
+    path('v1/auth/', include('djoser.urls')),
+    path('v1/auth/token/', views.obtain_auth_token)
+    ```python
     PS. at the top you'll have to include the word include in the following line to get it to work.
-        `from django.conf.urls import url, include`
+    ```python
+    from rest_framework.authtoken import views
+    from django.urls import path, include
+    ```
+
+- To be able to use this from your rest client you'll need specify the authentication classes that your project uses.
+```python
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+```
 
 ## Exploring endpoints and adding a user.
 - Let's run our server now (`python manage.py runserver`)
@@ -159,8 +176,8 @@ A RESTful api is basically a way to transfer information from a server (where yo
     - http://localhost:8000/admin/
         - but I can't login! what's going on! oh my god dan has such cute cats and I can't concentrate!
         - we'll deal with this very soon.
-    - http://localhost:8000/rest-auth/
-        - there are a lot of options here, shown here:
+    - http://localhost:8000/v1/auth/users/
+        - there are a lot of options here, shown here: ### TODO ###
             ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_404_with_rest_auth_endpoints.png)
         - these are all of the endpoints that the restauth (the login api part to our website to work.)
         - but we have to do a few more things to get this to work.
@@ -178,13 +195,15 @@ A RESTful api is basically a way to transfer information from a server (where yo
 - to walk you through this do the following steps.
     1. open your rest client
     2. use the "POST" method
-    3. enter in the following url http://localhost:8000/rest-auth/login
+    3. enter in the following url `http://localhost:8000/v1/auth/token/`
+        - You may need to add the header: `Content-Type: application/json`
     4. in the body enter the following parameters.
         - username: the_user_name_you_used_earlier
         - password: the_password_you_entered_earlier
     5. press send, and you should see the key!
 
 - the picture you should see is below.
+### TODO ###
     ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_test_api_1.png)
 
 - What this key is used for is to login your user.
@@ -198,9 +217,11 @@ A RESTful api is basically a way to transfer information from a server (where yo
 - let's add cats to our installed apps so that our website knows to use that part of the site:)
     - go to the zero_to_api folder in your project root.
         - in the settings.py `INSTALLED_APPS` list add the following lines.
-            ```
+            ```python
             'cats'
             ```
+- What are apps?
+    - Apps are essentially a piece of functionality for your site, django tries to keep different pieces of functionality separate from other pieces. Account, is different than cats.
 
 ## Creating some models
 - Now let's first add your models in the models.py in your cats folder (or what ever your created.)
@@ -209,7 +230,27 @@ A RESTful api is basically a way to transfer information from a server (where yo
         - Cat Types
         - Cats
     - Here's what the models are going to look like.
-        ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_models.png)
+    ```python
+from django.db import models
+
+class CatBreed(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+
+    def __str__(self):
+        return F"{self.name}"
+
+class Cat(models.Model):
+    name = models.CharField(max_length=255)
+    cat_breed = models.ForeignKey(CatBreed,
+                                  on_delete=models.SET_NULL,
+                                  null=True)
+
+    def __str__(self):
+        return F"{self.name}, {self.cat_breed}"
+
+
+    ```
 
 ## Let's talk about migrations
 - Let's do the "makemigrations" because we've made changes to our own app that we've created with the following command
@@ -224,9 +265,17 @@ A RESTful api is basically a way to transfer information from a server (where yo
 
 - Now that we have tables in our database, let's add them to the admin project so that we can add some data
     - go to the admin.py in your cats folder and modify it like the following picture.
-        ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_admin.png)
+    ```python
+from django.contrib import admin
+
+from .models import Cat, CatBreed
+
+admin.site.register(Cat)
+admin.site.register(CatBreed)
+
+    ```
     - now go back and run your server and login to the admin page (http://localhost:8000/admin/)
-        - you should see "Cat" and "CatType" models included.
+        - you should see "Cat" and "CatBreed" models included.
 
     - Click on each of them and add some data. I already have some:)
 
@@ -235,14 +284,29 @@ A RESTful api is basically a way to transfer information from a server (where yo
     - So let's create one.
 
 ## Let's create our restful api!
-- let's make it accessible!s
+- let's make it accessible, so that we can add cats from our client!
+
 
 ## let's make some serializers
 - In your cats Folder we're going to create a serializers.py file.
     - this is going to serialize our data, I'm not going to go into this in depth, but you can think of them as something that allows you have the functionality to modify your models, as well as get data from them via an api.
         - for more information go to http://www.django-rest-framework.org/api-guide/serializers/
     - our serializers are going to look like the following and are going to use the ModelSerializer, they look like this.
-        ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_serializers.png)
+    ```python
+from .models import Cat, CatBreed
+
+from rest_framework import serializers
+
+class CatBreedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CatBreed
+        fields = '__all__'
+
+class CatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cat
+        fields = '__all__'
+    ```
 
 ## let's make some viewsets
 - now that we have to create viewsets, in the django rest framework documentation they define it as follows.
@@ -253,6 +317,23 @@ A RESTful api is basically a way to transfer information from a server (where yo
         - a queryset which you can think of the data that your viewset is going to use.
         - your serializer.
     - your serializers will end up looking like the following if you look at the documentation:
+        ```python
+from django.shortcuts import render
+from rest_framework import viewsets
+
+from .models import Cat, CatBreed
+from .serializers import CatBreedSerializer, CatSerializer
+
+class CatBreedViewset(viewsets.ModelViewSet):
+    queryset = CatBreed.objects.all()
+    serializer_class = CatBreedSerializer
+
+class CatViewSet(viesets.ModelsViewSet);
+    queryset = Cat.objects.all()
+    serializer_class = CatSerializer
+
+        ```
+
 
 ## let's hook it up to the urls with the django rest framework "router"
 - Let's hook it up to our urls so that we can use it!
@@ -260,13 +341,22 @@ A RESTful api is basically a way to transfer information from a server (where yo
     - create a urls.py file in your cats folder.
     - now we're going to include a router which is a bit like urls in django, this adds our viewsets to a url path.
     - it should look like this
-        ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_urls.png)
+    ```python
+from rest_framework import routers
+from .views import CatBreedViewSet, CatViewSet
+
+router = routers.DefaultRouter()
+router.register(r'cat-breeds', CatBreedViewSet)
+router.register(r'cats', CatViewSet)
+
+urlpatterns = router.urls
+    ```
 
 - Now that we have our urls defined in our app we have to add it to the overall web project.
     - it's one line of code in the zero_to_api/urls.py file. the line is:
-            ```
-        url('api/v1/', include('cats.urls')),
-            ```
+    ```python
+    path('api/v1/catapp', include('cats.urls')),
+    ```
     - this just connects it like we did to django-restauth earlier
 
 ## What did I just do?
@@ -283,11 +373,10 @@ A RESTful api is basically a way to transfer information from a server (where yo
 - Let's enable this for the post method so that we can add something.
     - we need to enable token authorization so that we can post! or else we're going to get some csrf failure.
     - you need to add the following lines to your zero_to_api/settings.py file.
-     ```
-        REST_FRAMEWORK = {
-            'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
-            'PAGE_SIZE': 100,
-        }
+     ```python
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
+}
      ```
     - this will also allow us post as well as give us functionality private.
     - now if you look at the following picture you should be able to add a new cat! via an api (using arc)
@@ -298,23 +387,55 @@ A RESTful api is basically a way to transfer information from a server (where yo
 - we don't really care if people can see our cat types, but we don't want people to know our cat names!
 - let's make the cat types public, but let's make the cats private, where you need to login.
 - in your viewsets.py file you need to "include permissions" add the following line if you don't want to make it public
-```
-permission_classes = [permissions.IsAuthenticated]
+```python
+from rest_framework import viewsets, permissions
+
+# ... other code
+class CatViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Cat.objects.all()
+    serializer_class = CatSerializer
+
 ```
     - this should look like
-        ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_viewsets_with_authentication.png)
-- now if you go to http://localhost:8000/api/v1/cats/ it'll show you that you don't have any credentials, and won't permit you yay!
+```python
+from django.shortcuts import render
+from rest_framework import viewsets, permissions
+
+from .models import Cat, CatBreed
+from .serializers import CatBreedSerializer, CatSerializer
+
+
+class CatBreedViewSet(viewsets.ModelViewSet):
+    queryset = CatBreed.objects.all()
+    serializer_class = CatBreedSerializer
+
+
+class CatViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Cat.objects.all()
+    serializer_class = CatSerializer
+```
+- now if you go to http://localhost:8000/v1/cats/ it'll show you that you don't have any credentials, and won't permit you yay!
+    - How can I test this? If you logout from the admin you should be able to
 
 ## I want to access my private stuff!
 - go to your advanced rest client, use the "POST" method and put in the login url (http://localhost:8000/rest-auth/login)
 - put in your credentials in the body (like we did the first time) and copy the key somewhere handy so you can copy it.
     if you need a refresher see: ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_test_api_1.png)
 - now we're going to access our stuff via token authentication!
-- Use the "GET" method and enter the url "http://localhost:8000/api/v1/cats/"
+- Use the "GET" method and enter the url "http://localhost:8000/v1/catapp/cats/"
 - in your advanced rest client select the "Headers" section
     - in the header name enter "Authorizations"
     - in the header value enter "Token <your-super-private-key>"
 - it should look like the following: ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_get_authenticated.png)
+
+## Djoser we installed it, but we haven't used it yet
+- Djoser will allow you to sign up users and deal with all of the complications of doing that.
+- You'll need to add a dummy backend for email.
+```python
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+```
 
 ## Conclusions
 - What have we done here?

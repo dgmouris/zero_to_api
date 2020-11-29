@@ -1,17 +1,13 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.shortcuts import render
-
 from rest_framework import viewsets, permissions
 
-from cats.models import Cat, CatType
-from cats.serializers import CatTypeSerializer, CatSerializer
+from .models import Cat, CatBreed
+from .serializers import CatBreedSerializer, CatSerializer
 
 
-class CatTypeViewSet(viewsets.ModelViewSet):
-    queryset = CatType.objects.all()
-    serializer_class = CatTypeSerializer
+class CatBreedViewSet(viewsets.ModelViewSet):
+    queryset = CatBreed.objects.all()
+    serializer_class = CatBreedSerializer
 
 
 class CatViewSet(viewsets.ModelViewSet):
