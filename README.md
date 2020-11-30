@@ -78,7 +78,8 @@ A RESTful api is basically a way to transfer information from a server (where yo
         - latest version.
 - django djoser
     - `pipenv install djoser`
-
+- django cors headers (so any client can access it.)
+    `pipenv install django-cors-headers`
 
 ## Starting a django project
 - django has a set of command line programs to help you set up your project.
@@ -93,7 +94,7 @@ A RESTful api is basically a way to transfer information from a server (where yo
             - this is a bit like `django-admin.py`, but more specific to your website.
         - a folder which has the same name as your project (zero_to_api) which contains the following files
             - urls.py
-                - this is going help us define our endpoints (ie. http://localhost:8000/rest-auth/login, but note we haven't created this yet.)
+                - this is going help us define our endpoints (ie. http://localhost:8000/v1/auth/token/ login, but note we haven't created this yet.)
             - settings.py
                 - all of the static settings variables that are essential to our app.
                 - as well it defines the apps (parts of our website) that are going to be used.
@@ -134,8 +135,20 @@ A RESTful api is basically a way to transfer information from a server (where yo
         'rest_framework',
         'rest_framework.authtoken',
         'djoser',
+        'corsheaders',
 ```
 
+    - To the middleware you'll have to use CorsMiddleware right before the CommonMiddleware this is really really important if you want to use multiple clients. You'll also be specifying that any client can access our api with `CORS_ALLOW_ALL_ORIGINS = True`
+```python
+MIDDLEWARE = [
+    # other middles
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+]
+
+# Cors
+CORS_ALLOW_ALL_ORIGINS = True
+```
     - now if you go back to your terminal and run your local server (`python manage.py runserver`)
         - you should see something similar to the first time.
             - show picture ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_apply_migrations_2.png)
@@ -151,19 +164,19 @@ A RESTful api is basically a way to transfer information from a server (where yo
 ```python
     path('v1/auth/', include('djoser.urls')),
     path('v1/auth/token/', views.obtain_auth_token)
-```python
+```
     PS. at the top you'll have to include the word include in the following line to get it to work.
 ```python
     from rest_framework.authtoken import views
     from django.urls import path, include
 ```
 
-- To be able to use this from your rest client you'll need specify the authentication classes that your project uses.
+- To be able to use this from your rest client you'll need specify the authentication classes that your project uses. We're using token authentication 
 ```python
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
     ]
 }
 ```
@@ -372,7 +385,7 @@ urlpatterns = router.urls
 ## Enable the api for the "POST" method
 - Let's enable this for the post method so that we can add something.
     - we need to enable token authorization so that we can post! or else we're going to get some csrf failure.
-    - you need to add the following lines to your zero_to_api/settings.py file.
+    - you need to add the following lines to your zero_to_api/settings.py file. You might have already done this but this is super important!
 ```python
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
@@ -420,13 +433,13 @@ class CatViewSet(viewsets.ModelViewSet):
     - How can I test this? If you logout from the admin you should be able to
 
 ## I want to access my private stuff!
-- go to your advanced rest client, use the "POST" method and put in the login url (http://localhost:8000/rest-auth/login)
+- go to your advanced rest client, use the "POST" method and put in the login url (http://localhost:8000/v1/auth/token)
 - put in your credentials in the body (like we did the first time) and copy the key somewhere handy so you can copy it.
     if you need a refresher see: ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_test_api_1.png)
 - now we're going to access our stuff via token authentication!
 - Use the "GET" method and enter the url "http://localhost:8000/v1/catapp/cats/"
 - in your advanced rest client select the "Headers" section
-    - in the header name enter "Authorizations"
+    - in the header name enter "Authorization"
     - in the header value enter "Token <your-super-private-key>"
 - it should look like the following: ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_get_authenticated.png)
 
@@ -436,6 +449,24 @@ class CatViewSet(viewsets.ModelViewSet):
 ```python
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ```
+- If you go to `http://localhost:8000/v1/auth/users/` you should be able to register a new user.
+- You can also go to the rest client and use the "POST" method to `http://localhost:8000/v1/auth/users/` with the following body:
+```json
+    {
+        "email": "rick@rick.com",
+        "username": "rick",
+        "password": "temptemp"
+    }
+```
+- then you can login at `http://localhost:8000/v1/auth` with the body
+```json
+{
+    "username":"rick",
+    "password": "temptemp"
+}
+```
+- and then access our private cats api here `http://localhost:8000/v1/catapp/cats/` with the Header
+`Authorization: Token <token from above here>` to see the information.
 
 ## Conclusions
 - What have we done here?
@@ -450,3 +481,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ## Success, Congratulations you're awesome!
 - you've reated your first app so now go conquer the world! Apps, Websites, IOT, and what ever else you want to do!
+
+
+## Extras
+    - need to add this ### TODO ####
