@@ -236,6 +236,7 @@ REST_FRAMEWORK = {
 ```python
             'cats'
 ```
+
 - What are apps?
     - Apps are essentially a piece of functionality for your site, django tries to keep different pieces of functionality separate from other pieces. Account, is different than cats.
 
@@ -290,6 +291,7 @@ admin.site.register(Cat)
 admin.site.register(CatBreed)
 
 ```
+
     - now go back and run your server and login to the admin page (http://localhost:8000/admin/)
         - you should see "Cat" and "CatBreed" models included.
 
@@ -356,7 +358,7 @@ class CatViewSet(viesets.ModelsViewSet);
     - this is going to be similar to what we did with django-restauth, but this is going to be all our stuff!
     - create a urls.py file in your cats folder.
     - now we're going to include a router which is a bit like urls in django, this adds our viewsets to a url path.
-    - it should look like this
+    - it should look like this:
 ```python
 from rest_framework import routers
 from .views import CatBreedViewSet, CatViewSet
@@ -373,6 +375,7 @@ urlpatterns = router.urls
 ```python
     path('api/v1/catapp', include('cats.urls')),
 ```
+
     - this just connects it like we did to django-restauth earlier
 
 ## What did I just do?
@@ -413,6 +416,7 @@ class CatViewSet(viewsets.ModelViewSet):
     serializer_class = CatSerializer
 
 ```
+
     - this should look like
 ```python
 from django.shortcuts import render
@@ -432,6 +436,7 @@ class CatViewSet(viewsets.ModelViewSet):
     queryset = Cat.objects.all()
     serializer_class = CatSerializer
 ```
+
 - now if you go to http://localhost:8000/v1/cats/ it'll show you that you don't have any credentials, and won't permit you yay!
     - How can I test this? If you logout from the admin you should be able to
 
