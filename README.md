@@ -149,6 +149,7 @@ MIDDLEWARE = [
 # Cors
 CORS_ALLOW_ALL_ORIGINS = True
 ```
+
     - now if you go back to your terminal and run your local server (`python manage.py runserver`)
         - you should see something similar to the first time.
             - show picture ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_apply_migrations_2.png)
@@ -165,13 +166,15 @@ CORS_ALLOW_ALL_ORIGINS = True
     path('v1/auth/', include('djoser.urls')),
     path('v1/auth/token/', views.obtain_auth_token)
 ```
+
     PS. at the top you'll have to include the word include in the following line to get it to work.
+
 ```python
     from rest_framework.authtoken import views
     from django.urls import path, include
 ```
 
-- To be able to use this from your rest client you'll need specify the authentication classes that your project uses. We're using token authentication 
+- To be able to use this from your rest client you'll need specify the authentication classes that your project uses. We're using token authentication to create our api.
 ```python
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -445,7 +448,7 @@ class CatViewSet(viewsets.ModelViewSet):
 
 ## Djoser we installed it, but we haven't used it yet
 - Djoser will allow you to sign up users and deal with all of the complications of doing that.
-- You'll need to add a dummy backend for email.
+- You'll need to add a dummy backend for email, you'll need to configure one at some point if you want to deploy.
 ```python
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ```
@@ -484,4 +487,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 ## Extras
-    - need to add this ### TODO ####
+   - Add some javascript that can "consume" our api.
+   - Deploy to heroku.
+   - Add a lot of data from an (opendata platform)[https://www.kaggle.com/ma7555/cat-breeds-dataset] using management commands.
