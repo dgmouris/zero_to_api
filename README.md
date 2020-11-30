@@ -138,7 +138,7 @@ A RESTful api is basically a way to transfer information from a server (where yo
         'corsheaders',
 ```
 
-    - To the middleware you'll have to use CorsMiddleware right before the CommonMiddleware this is really really important if you want to use multiple clients. You'll also be specifying that any client can access our api with `CORS_ALLOW_ALL_ORIGINS = True`
+- To the middleware you'll have to use CorsMiddleware right before the CommonMiddleware this is really really important if you want to use multiple clients. You'll also be specifying that any client can access our api with `CORS_ALLOW_ALL_ORIGINS = True`
 ```python
 MIDDLEWARE = [
     # other middles
@@ -150,15 +150,15 @@ MIDDLEWARE = [
 CORS_ALLOW_ALL_ORIGINS = True
 ```
 
-    - now if you go back to your terminal and run your local server (`python manage.py runserver`)
-        - you should see something similar to the first time.
-            - show picture ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_apply_migrations_2.png)
+- now if you go back to your terminal and run your local server (`python manage.py runserver`)
+    - you should see something similar to the first time.
+        - show picture ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_apply_migrations_2.png)
 
-    - let's run our migrations again so that we can apply the changes to the database!
-        - `python manage.py makemigrations`
-            - this will tell us no changes detected because we haven't changed anything, we just need to add new packages.
-        - `python manage.py migrate`
-            - this is going to add some tables from the django-restauth package
+- let's run our migrations again so that we can apply the changes to the database!
+    - `python manage.py makemigrations`
+        - this will tell us no changes detected because we haven't changed anything, we just need to add new packages.
+    - `python manage.py migrate`
+        - this is going to add some tables from the django-restauth package
 
 ## Let's add the django-restauth login endpoints to our package.
 - urls.py package add the following line in the `urls_patterns list`
@@ -292,10 +292,10 @@ admin.site.register(CatBreed)
 
 ```
 
-    - now go back and run your server and login to the admin page (http://localhost:8000/admin/)
-        - you should see "Cat" and "CatBreed" models included.
+- now go back and run your server and login to the admin page (http://localhost:8000/admin/)
+    - you should see "Cat" and "CatBreed" models included.
 
-    - Click on each of them and add some data. I already have some:)
+- Click on each of them and add some data. I already have some:)
 
 - That's Great but....
     - You guys want this to be accessible via an api!
@@ -355,7 +355,6 @@ class CatViewSet(viesets.ModelsViewSet);
 
 ## let's hook it up to the urls with the django rest framework "router"
 - Let's hook it up to our urls so that we can use it!
-    - this is going to be similar to what we did with django-restauth, but this is going to be all our stuff!
     - create a urls.py file in your cats folder.
     - now we're going to include a router which is a bit like urls in django, this adds our viewsets to a url path.
     - it should look like this:
@@ -376,17 +375,16 @@ urlpatterns = router.urls
     path('api/v1/catapp', include('cats.urls')),
 ```
 
-    - this just connects it like we did to django-restauth earlier
+- This will connect all of the routes from our app to the entire project.
 
 ## What did I just do?
 - run your localserver and go to the following destinations in your browser you should see something crazy cool!
-    http://localhost:8000/api/v1/cats/
-    http://localhost:8000/api/v1/cat-types/
+    - `http://localhost:8000/v1/catapp/cats/`
+    - `http://localhost:8000/v1/catapp/cat-breeds/`
 - Congratulations you just created your first api!
 
 ## But wait there's more!
-- Can we access this from our "Advanced Rest Client"?
-- Yes But only with the GET Method!
+- Can we access this from our REST Clients? Yes!
 
 ## Enable the api for the "POST" method
 - Let's enable this for the post method so that we can add something.
@@ -397,9 +395,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
 }
 ```
-    - this will also allow us post as well as give us functionality private.
-    - now if you look at the following picture you should be able to add a new cat! via an api (using arc)
-        ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_create.png)
+
+- this will also allow us post as well as give us functionality private.
+- now if you look at the following picture you should be able to add a new cat! via an api (using arc)
+    ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_create.png)
 
 
 ## Let's make our api Private!
@@ -417,7 +416,7 @@ class CatViewSet(viewsets.ModelViewSet):
 
 ```
 
-    - this should look like
+- the entire file should look like this:
 ```python
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
@@ -466,6 +465,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
         "password": "temptemp"
     }
 ```
+
 - then you can login at `http://localhost:8000/v1/auth` with the body
 ```json
 {
@@ -473,13 +473,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     "password": "temptemp"
 }
 ```
+
 - and then access our private cats api here `http://localhost:8000/v1/catapp/cats/` with the Header
 `Authorization: Token <token from above here>` to see the information.
 
 ## Conclusions
 - What have we done here?
    - create a django project
-   - added the djangorestframework, django-restauth packages
+   - added the django, djangorestframework, djoser, django-cors-headers packages
    - hooked up the authentication api and configured it to our web project.
    - created an app with models (and added them to the admin), serializers, views, urls,
    - created an api for the app above and hooked it up to our web project.
@@ -489,7 +490,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ## Success, Congratulations you're awesome!
 - you've reated your first app so now go conquer the world! Apps, Websites, IOT, and what ever else you want to do!
-
 
 ## Extras
    - Add some javascript that can "consume" our api.
