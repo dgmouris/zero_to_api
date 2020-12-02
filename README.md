@@ -26,7 +26,7 @@ Creating an authenticated api from scratch, with django, django rest framework, 
 - If we have time
    - Add some javascript that can "consume" our api.
    - Deploy to heroku.
-   - Add a lot of data from an (opendata platform)[https://www.kaggle.com/ma7555/cat-breeds-dataset] using management commands.
+   - Add a lot of data from an [opendata platform](https://www.kaggle.com/ma7555/cat-breeds-dataset) using management commands.
 
 ## What is a restful api, and who uses it?
 
@@ -96,7 +96,7 @@ If you're totally stuck during the tutorial at any time you can do the following
 - We're going to use the `django-admin.py startproject` to begin the project.
     - I'm calling mine zero_to_api. (eg. `django-admin.py startproject zero_to_api` if you want to do the same.)
 - Now you should see the barebones of your project (go into the folder `cd zero_to_api` your project name)
-    - a folder for you project
+    - in the folder of your project you should see the following files:
         - `manage.py` a file that helps gives us handy things that will help us with our project
             - migrations for our database (this is the orm part)
             - run a local server so that we can test stuff on our computer
@@ -117,11 +117,11 @@ If you're totally stuck during the tutorial at any time you can do the following
 - go into your project folder. Let's see if we can run django! in your terminal run
     - `python manage.py runserver`
 - now if you look at your terminal you will see something like the following:
-    show picture ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_apply_migrations.png)
+![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_apply_migrations.png)
 - what this means is that django wants to make some stuff in our database and we also want it to do that!
 - running migrations (a simplified overview for our talk.)
     - `python manage.py makemigrations`
-        - this checks to see if anything changed in your project that will need to modify your database.
+        - this checks to see if anything changed in your project that will need to modify your database. Note: All of the models (pythonic way of interacting with the database) are from external packages, so this is only going to have changes if we create our own models.
         - this is mostly going to apply when you're writing your own models (like tables in sql except for python)
     - `python manage.py migrate`
         - this applies the migrations to your database.
@@ -162,14 +162,14 @@ MIDDLEWARE = [
 # Cors (you can add this to the bottom)
 CORS_ALLOW_ALL_ORIGINS = True
 ```
-
+Note: This makes it so that you can control who can access your website, you can make it so one or multiple domains (eg. www.github.com), one or multiple ips (eg. 127.0.0.1) can access your site.
 - now if you go back to your terminal and run your local server (`python manage.py runserver`)
-    - you should see something similar to the first time.
+    - you should see something similar to the first time. We need to add the models from external packages so those packages can access the database using their models!
         - show picture ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_apply_migrations_2.png)
 
 - let's run our migrations again so that we can apply the changes to the database!
     - `python manage.py makemigrations`
-        - this will tell us no changes detected because we haven't changed anything, we just need to add new packages.
+        - this will tell us no changes detected because we haven't changed/created models of our own, we just need to add new packages.
     - `python manage.py migrate`
         - this is going to add some tables from the django-restauth package
 
@@ -244,6 +244,7 @@ REST_FRAMEWORK = {
     "password": "temptemp"
 }
 ```
+
     5. press send, and you should see the key! You should see something like this.
     ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_rest_client_success.png)
 
@@ -296,6 +297,8 @@ class Cat(models.Model):
 
 ```
 
+Note: if you want to learn more about django models you can take a look here [Model docs](https://docs.djangoproject.com/en/3.1/topics/db/models/)
+
 ## Let's talk about migrations
 - Let's do the "makemigrations" because we've made changes to our own app that we've created with the following command
     - python manage.py makemigrations
@@ -328,6 +331,8 @@ admin.site.register(CatBreed)
 - That's Great but....
     - You guys want this to be accessible via an api! That's the goal of today!
     - So let's create one.
+
+Note: If you want to learn more about the admin you can go look at the [admin docs](https://docs.djangoproject.com/en/3.1/ref/contrib/admin/)
 
 ## Let's create our restful api!
 - let's make it accessible, so that we can add cats from our client!
@@ -433,6 +438,8 @@ REST_FRAMEWORK = {
     ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_rest_client_add_cat.png)
 Note: On post requests you need to add a traling slash to all requests (unless you specify otherwise in the settings!)
 
+Note: You can go here to learn more about [django rest framework settings](https://www.django-rest-framework.org/api-guide/settings/)
+
 ## Let's make our api Private!
 - we don't really care if people can see our cat types, but we don't want people to know our cat names!
 - let's make the cat types public, but let's make the cats private, where you need to login.
@@ -472,7 +479,8 @@ class CatViewSet(viewsets.ModelViewSet):
 - now if you go to http://localhost:8000/v1/cats/ it'll show you that you don't have any credentials, and won't permit you yay!
     - How can I test this? Rest Client to the rescue.
 
-Note: If you want to learn more about permissions, you can go to the fantastic documentation here https://www.django-rest-framework.org/tutorial/4-authentication-and-permissions/
+Note: If you want to learn more about permissions, you can go to the fantastic documentation here [permissions docs](https://www.django-rest-framework.org/tutorial/4-authentication-and-permissions/)
+If you want to learn more about viewsets you can look here (viewset docs)[https://www.django-rest-framework.org/api-guide/viewsets/]
 
 ## I want to access my private stuff!
 - go to your advanced rest client, use the "POST" method and put in the login url (http://localhost:8000/v1/auth/token)
@@ -492,10 +500,12 @@ Note: If you want to learn more about permissions, you can go to the fantastic d
 
 ## Djoser we installed it, but we haven't used it yet
 - Djoser will allow you to sign up users and deal with all of the complications of doing that.
-- You'll need to add a dummy backend for email, you'll need to configure one at some point if you want to deploy.
+- You'll need to add a dummy backend for email, you'll need to configure one at some point if you want to deploy. The following is going to go into your `settings.py`.
 ```python
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ```
+
+This is essentially going to show you emails in your console, which is what we need for now.
 - If you go to `http://localhost:8000/v1/auth/users/` you should be able to register a new user.
 - You can also go to the rest client and use the "POST" method to `http://localhost:8000/v1/auth/users/` with the following body:
 ```json
@@ -526,12 +536,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
    - created an api for the app above and hooked it up to our web project.
 - This code doesn't use best practices necessarily so look them up if you are worried.
 - Feel free to use this, I hope it was helpful.
-- If you liked this talk/tutorial and you want to help me, star the repo, and if you're a connection on linkedin endorse me for python.
+- If you liked this talk/tutorial and you want to help me, star the repo, add me on linkedin if you'd like as normally I share when edmontonpy is.
 
 ## Success, Congratulations you're awesome!
-- you've reated your first app so now go conquer the world! Apps, Websites, IOT, and what ever else you want to do!
+- you've reated your first RESTful so now go conquer the world! Apps, Websites, IOT, and what ever else you want to do!
+- Hopefully this was useful and you're as excited as [Steve Ballmer](https://youtu.be/hOq85MuBTXg?t=14).
 
 ## Extras
    - Add some javascript that can "consume" our api.
    - Deploy to heroku.
-   - Add a lot of data from an (opendata platform)[https://www.kaggle.com/ma7555/cat-breeds-dataset] using management commands.
+   - Add a lot of data from an [opendata platform](https://www.kaggle.com/ma7555/cat-breeds-dataset) using management commands.
