@@ -245,6 +245,7 @@ REST_FRAMEWORK = {
 }
 ```
 
+
     5. press send, and you should see the key! You should see something like this.
     ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_rest_client_success.png)
 
