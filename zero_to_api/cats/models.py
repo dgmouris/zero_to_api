@@ -1,22 +1,17 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models
 
-
-class CatType(models.Model):
-    type_name = models.CharField(max_length=255)
+class CatBreed(models.Model):
+    name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
 
     def __str__(self):
-        return "{}, {}".format(self.type_name, self.description)
+        return F"{self.name}"
 
 class Cat(models.Model):
     name = models.CharField(max_length=255)
-    cat_type = models.ForeignKey(CatType,
-                                 on_delete=models.SET_NULL,
-                                 null=True)
-
+    cat_breed = models.ForeignKey(CatBreed,
+                                  on_delete=models.SET_NULL,
+                                  null=True)
 
     def __str__(self):
-        return "{}, {}".format(self.name, self.cat_type)
+        return F"{self.name}, {self.cat_breed}"

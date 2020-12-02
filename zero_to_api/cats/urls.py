@@ -1,10 +1,8 @@
-from django.conf.urls import url
 from rest_framework import routers
-from cats.views import CatTypeViewSet, CatViewSet
+from .views import CatBreedViewSet, CatViewSet
 
 router = routers.DefaultRouter()
-router.register(r'cat-types', CatTypeViewSet)
+router.register(r'cat-breeds', CatBreedViewSet)
 router.register(r'cats', CatViewSet)
-
 
 urlpatterns = router.urls
