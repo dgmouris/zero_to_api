@@ -230,14 +230,14 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.SessionAuthentication', # we're going to remove this
 ```
 - to walk you through this do the following steps.
-    1. open your rest client
-    2. use the "POST" method
-    3. enter in the following url `http://localhost:8000/v1/auth/token/`
-        - You may need to add the header: `Content-Type: application/json`
-    4. in the body enter the following parameters.
-        - username: the_user_name_you_used_earlier
-        - password: the_password_you_entered_earlier
-        the body should look like this.
+1. open your rest client
+2. use the "POST" method
+3. enter in the following url `http://localhost:8000/v1/auth/token/`
+    - You may need to add the header: `Content-Type: application/json`
+4. in the body enter the following parameters.
+    - username: the_user_name_you_used_earlier
+    - password: the_password_you_entered_earlier
+    the body should look like this.
 ```json
 {
     "username": "daniel",
@@ -245,11 +245,10 @@ REST_FRAMEWORK = {
 }
 ```
 
+5. press send, and you should see the key! You should see something like this.
+![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_rest_client_success.png)
 
-    5. press send, and you should see the key! You should see something like this.
-    ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_rest_client_success.png)
-
-    - What this key is used for is to login your user later on.
+- What this key is used for is to login your user later on.
 
 ## Let's create an app (part of your website.) that requires authentication and we're going to make it accessible.
 - how do we do this?
