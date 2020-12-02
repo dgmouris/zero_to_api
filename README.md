@@ -8,25 +8,11 @@ Creating an authenticated api from scratch, with django, django rest framework, 
     - [Firefox rest client add on](https://addons.mozilla.org/en-CA/firefox/addon/restclient/)
     - [Chrome rest client add on](https://chrome.google.com/webstore/detail/rest-ape-advanced-api-tes/ohalacbnhbfllngjcgnejjdgmhbkcnld?hl=en)
 - git (if you want to clone the repo later.)
-- some basic knowledge of django, but I'll try to fill in the gaps.
+- Some basic knowledge of django is great but it's alright if you don't. What do you need to know?
+    - It's a web framework that you can serve small and large websites (how big? Instagram big).
 - I'm going to do this all in Ubuntu, so instructions will be a bit different but similar for mac and windows.
-
-## if you want to follow along while I present (or look at this afterwards)
-
-1. do a git clone of the repository
-`git clone https://github.com/dgmouris/zero_to_api.git`
-
-- if you're using python virtualenvs
-### TODO ###
-
-
-- if you're using pipenv 
-2. initialize your virtualenv with the following command
-`pipenv shell --python=3.7`
-3. install all the packages
-`pipenv install`
-4. try not to jeer me as I talk :)
-
+    - On windows you'll need to use powershell, WSL (windows subsystem for linux)
+    - On Mac you'll need to use powershell 
 
 ## What are we going to do?
 - talk about restful apis
@@ -35,8 +21,8 @@ Creating an authenticated api from scratch, with django, django rest framework, 
    - create a django project
    - add the djangorestframework and djoser packages
    - hook up the authentication api and configure it to our web project.
-   - create an app with models (and add them to the admin), serializers, views, urls,
-   - create an api for the app above and hook it up to our web project.
+   - create an app with models (and add them to the admin), serializers, views, urls (more on all of these later)
+   - create a RESTful api for the app above and hook it up to our web project.
 - If we have time
    - Add some javascript that can "consume" our api.
    - Deploy to heroku.
@@ -52,55 +38,79 @@ A RESTful api is basically a way to transfer information from a server (where yo
 - Used by mobile apps, all website you go to, iot devices and much more!
 - Used by data scientists (and machine learning) professionals to get their data.
 
-
 ## What are the packages we're going to use and why are we going to use them.
 - we're going to be creating the api using the following packages:
     - [Django](https://www.djangoproject.com)
         - this is a web framework and an orm (Object Relationship Mapper) Basically just an sql interface
     - [Django Rest Framework](https://www.django-rest-framework.org/)
-        - this is going to allow us to really simplify the api creation process
+        - this is going to allow us to really simplify the api creation process.
+        - We're also going to use this for login with tokens as well.
     - [Djoser](https://djoser.readthedocs.io/en/latest/getting_started.html)
-        - this is going to handle our registration (through the api) as well as login.
+        - this is going to handle our registration (through the api).
 
 ## Creating your environment
-- create a folder (I created mine)
-    - you could use `mkdir my-super-cool-project-lol`
-- I used `pipenv shell` to create a virtualenvironment which allows us to isolate packages to this project.
-- you should see your virtual environment on the left hand side of your terminal
 
+The following is going to be in your terminal.
+
+- Create a folder for your project.
+    - you could use `mkdir my-super-cool-project-lol`
+
+- Create a virtual environment
+- if you're using python virtualenvs (most of you)
+1. `python3 -m venv ./venv`
+    - This is going to create a virtual environment so that you can install django and other packages isolated from other environments.
+2. `source venv/bin/activate`
+    - This is going to start your environment.
+3. `python3 -m pip install <package name>`
+    - you're going to use this to install the packages needed.
+- if you're using pipenv (many of you won't so you can ignore the next two points)
+1. initialize your virtualenv with the following command
+    `pipenv shell --python=3.7`
+2. install the packages
+    `pipenv install <package name>`
+    (where ever you see `python3 -m pip install` you can replace it with `pipenv install`)
+
+Note:
+If you're totally stuck during the tutorial at any time you can do the following.
+- `git clone https://github.com/dgmouris/zero_to_api.git`
+    do a git clone of the repository
+- Create your environment, and init initial (look above)
+- Install all the packages required.
+    - `python3 -m pip install -r requirements.txt`
 
 ## Installing the packages.
 - Django installation:
-    - `pipenv install django`
+    - `python3 -m pip install django`
         - this is going to install the latest version of django.
 - Django rest framework installation
-    - `pipenv install djangorestframework`
+    - `python3 -m pip install djangorestframework`
         - latest version.
 - django djoser
-    - `pipenv install djoser`
+    - `python3 -m pip install djoser`
 - django cors headers (so any client can access it.)
-    `pipenv install django-cors-headers`
+    - `python3 -m pip install django-cors-headers`
 
 ## Starting a django project
 - django has a set of command line programs to help you set up your project.
     - if you type in django-admin in your shell then it should pop up with a bunch of options.
 - We're going to use the `django-admin.py startproject` to begin the project.
-    - I'm calling mine zero_to_api. (eg. django-admin.py startproject zero_to_api)
-- Now you should see the barebones of your project.
+    - I'm calling mine zero_to_api. (eg. `django-admin.py startproject zero_to_api` if you want to do the same.)
+- Now you should see the barebones of your project (go into the folder `cd zero_to_api` your project name)
     - a folder for you project
-        - manage.py a file that helps gives us handy things that will help us with our project
+        - `manage.py` a file that helps gives us handy things that will help us with our project
             - migrations for our database (this is the orm part)
             - run a local server so that we can test stuff on our computer
             - this is a bit like `django-admin.py`, but more specific to your website.
-        - a folder which has the same name as your project (zero_to_api) which contains the following files
-            - urls.py
+            - a lot of other handy things that we might get to.
+        - a folder which has the same name as your project (`zero_to_api`) which contains the following files
+            - `urls.py`
                 - this is going help us define our endpoints (ie. http://localhost:8000/v1/auth/token/ login, but note we haven't created this yet.)
-            - settings.py
+            - `settings.py`
                 - all of the static settings variables that are essential to our app.
                 - as well it defines the apps (parts of our website) that are going to be used.
-            - wsgi.py
+            - `wsgi.py`
                 - we're not going to worry about this today.
-        - db.sqlite3
+        - `db.sqlite3`
             - this is going to be the database we're going to use for today.
 
 ## Getting started doing some django.
@@ -129,24 +139,27 @@ A RESTful api is basically a way to transfer information from a server (where yo
     - go to your `INSTALLED_APPS`, and let's add a couple.
         - add the following lines within the existing list.
 ```python
-        # my installed apps
-        'django.contrib.auth',
-        ...other packages ...
-        'rest_framework',
-        'rest_framework.authtoken',
-        'djoser',
-        'corsheaders',
+INSTALLED_APPS = [
+    # my installed apps
+    'django.contrib.auth', # should already be there.
+    #...other packages ...
+    'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
+    'corsheaders'
+]
 ```
 
 - To the middleware you'll have to use CorsMiddleware right before the CommonMiddleware this is really really important if you want to use multiple clients. You'll also be specifying that any client can access our api with `CORS_ALLOW_ALL_ORIGINS = True`
 ```python
 MIDDLEWARE = [
-    # other middles
+    # other middlewares
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    # more middlewares
 ]
 
-# Cors
+# Cors (you can add this to the bottom)
 CORS_ALLOW_ALL_ORIGINS = True
 ```
 
@@ -161,23 +174,25 @@ CORS_ALLOW_ALL_ORIGINS = True
         - this is going to add some tables from the django-restauth package
 
 ## Let's add the django-restauth login endpoints to our package.
-- urls.py package add the following line in the `urls_patterns list`
+- urls.py package add the following line in the `urlpatterns list`
 ```python
+from django.contrib import admin
+from rest_framework.authtoken import views
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
     path('v1/auth/', include('djoser.urls')),
-    path('v1/auth/token/', views.obtain_auth_token)
+    path('v1/auth/token/', views.obtain_auth_token),
+]
 ```
+That's what you `urls.py` should look like!
 
-    PS. at the top you'll have to include the word include in the following line to get it to work.
-
-```python
-    from rest_framework.authtoken import views
-    from django.urls import path, include
-```
-
-- To be able to use this from your rest client you'll need specify the authentication classes that your project uses. We're using token authentication to create our api.
+- To be able to use this from your rest client you'll need specify the authentication classes that your project uses. We're using token authentication to create our api. In your `settings.py` add the following object.
 ```python
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.SessionAuthentication', # we're going to remove this
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ]
@@ -193,21 +208,27 @@ REST_FRAMEWORK = {
         - but I can't login! what's going on! oh my god dan has such cute cats and I can't concentrate!
         - we'll deal with this very soon.
     - http://localhost:8000/v1/auth/users/
-        - there are a lot of options here, shown here: ### TODO ###
-            ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_404_with_rest_auth_endpoints.png)
-        - these are all of the endpoints that the restauth (the login api part to our website to work.)
+        - You should see your credentials aren't provided! To be able to see all of the options you'll have to login to your admin. We'll do that next. should look like this.
+        ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_403_forbidden.png)
         - but we have to do a few more things to get this to work.
 - let's add our first user (yourself)
     - go back to the terminal and write the following command
         `python manage.py createsuperuser`
-        - answer the questions.
+        - answer the questions should look like this.
+        ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_createsuperuser.png)
     - let's go test it.
         1. run your server
         2. go to http://localhost:8000/admin/
         3. if you can login you've created your user!
+    - Now you can go to http://localhost:8000/v1/auth/users/ and you'll see yourself there.
+        ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_users_success.png)
 
 ## Testing your api!
 - let's open your rest client! I'm using the "Advanced Rest Client" plugin for chrome.
+- Comment out the line in your `settings.py` in your `REST_FRAMEWORK` object
+```python
+        # 'rest_framework.authentication.SessionAuthentication', # we're going to remove this
+```
 - to walk you through this do the following steps.
     1. open your rest client
     2. use the "POST" method
@@ -216,13 +237,17 @@ REST_FRAMEWORK = {
     4. in the body enter the following parameters.
         - username: the_user_name_you_used_earlier
         - password: the_password_you_entered_earlier
-    5. press send, and you should see the key!
+        the body should look like this.
+```json
+{
+    "username": "daniel",
+    "password": "temptemp"
+}
+```
+    5. press send, and you should see the key! You should see something like this.
+    ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_rest_client_success.png)
 
-- the picture you should see is below.
-### TODO ###
-    ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_test_api_1.png)
-
-- What this key is used for is to login your user.
+    - What this key is used for is to login your user later on.
 
 ## Let's create an app (part of your website.) that requires authentication and we're going to make it accessible.
 - how do we do this?
@@ -234,14 +259,17 @@ REST_FRAMEWORK = {
     - go to the zero_to_api folder in your project root.
         - in the settings.py `INSTALLED_APPS` list add the following lines.
 ```python
-            'cats'
+INSTALLED_APPS = [
+    # all of other apps.
+    'cats',
+]
 ```
 
 - What are apps?
-    - Apps are essentially a piece of functionality for your site, django tries to keep different pieces of functionality separate from other pieces. Account, is different than cats.
+    - Apps are essentially a piece of functionality for your site, django tries to keep different pieces of functionality separate from other pieces. Account management for example, is different than any cats functionality we have in our app.
 
 ## Creating some models
-- Now let's first add your models in the models.py in your cats folder (or what ever your created.)
+- Now let's first add your models in the `models.py` in your cats folder (or what ever your created.)
     - models are like tables in your database that you can manipulate with python.
     - We're going to create two models and add them.
         - Cat Types
@@ -266,7 +294,6 @@ class Cat(models.Model):
     def __str__(self):
         return F"{self.name}, {self.cat_breed}"
 
-
 ```
 
 ## Let's talk about migrations
@@ -281,7 +308,7 @@ class Cat(models.Model):
             ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_apply_migrate.png)
 
 - Now that we have tables in our database, let's add them to the admin project so that we can add some data
-    - go to the admin.py in your cats folder and modify it like the following picture.
+    - go to the admin.py in your cats folder and modify it the following contents.
 ```python
 from django.contrib import admin
 
@@ -291,14 +318,15 @@ admin.site.register(Cat)
 admin.site.register(CatBreed)
 
 ```
+    This makes it so that you can add rows to your table via the admin.
 
 - now go back and run your server and login to the admin page (http://localhost:8000/admin/)
-    - you should see "Cat" and "CatBreed" models included.
+    - you should see `Cat` and `CatBreed` models included.
 
 - Click on each of them and add some data. I already have some:)
 
 - That's Great but....
-    - You guys want this to be accessible via an api!
+    - You guys want this to be accessible via an api! That's the goal of today!
     - So let's create one.
 
 ## Let's create our restful api!
@@ -306,7 +334,7 @@ admin.site.register(CatBreed)
 
 
 ## let's make some serializers
-- In your cats Folder we're going to create a serializers.py file.
+- In your `cats` Folder we're going to create a `serializers.py` file.
     - this is going to serialize our data, I'm not going to go into this in depth, but you can think of them as something that allows you have the functionality to modify your models, as well as get data from them via an api.
         - for more information go to http://www.django-rest-framework.org/api-guide/serializers/
     - our serializers are going to look like the following and are going to use the ModelSerializer, they look like this.
@@ -342,20 +370,19 @@ from rest_framework import viewsets
 from .models import Cat, CatBreed
 from .serializers import CatBreedSerializer, CatSerializer
 
-class CatBreedViewset(viewsets.ModelViewSet):
+class CatBreedViewSet(viewsets.ModelViewSet):
     queryset = CatBreed.objects.all()
     serializer_class = CatBreedSerializer
 
-class CatViewSet(viesets.ModelsViewSet);
+class CatViewSet(viewsets.ModelViewSet):
     queryset = Cat.objects.all()
     serializer_class = CatSerializer
-
 ```
 
 
 ## let's hook it up to the urls with the django rest framework "router"
 - Let's hook it up to our urls so that we can use it!
-    - create a urls.py file in your cats folder.
+    - create a `urls.py` file in your cats folder.
     - now we're going to include a router which is a bit like urls in django, this adds our viewsets to a url path.
     - it should look like this:
 ```python
@@ -368,11 +395,11 @@ router.register(r'cats', CatViewSet)
 
 urlpatterns = router.urls
 ```
-
+    This is going to add a bunch of paths to each url, a get, update, create, list and delete view of the items of your data in your remove
 - Now that we have our urls defined in our app we have to add it to the overall web project.
-    - it's one line of code in the zero_to_api/urls.py file. the line is:
+    - it's one line of code in the `zero_to_api/urls.py` file. the line is:
 ```python
-    path('api/v1/catapp', include('cats.urls')),
+    path('v1/catapp/', include('cats.urls')),
 ```
 
 - This will connect all of the routes from our app to the entire project.
@@ -389,24 +416,30 @@ urlpatterns = router.urls
 ## Enable the api for the "POST" method
 - Let's enable this for the post method so that we can add something.
     - we need to enable token authorization so that we can post! or else we're going to get some csrf failure.
-    - you need to add the following lines to your zero_to_api/settings.py file. You might have already done this but this is super important!
+    - remove the `rest_framework.authentication.SessionAuthentication`  in you `zero_to_api/settings.py` file. You might have already done this but this is super important!
 ```python
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.SessionAuthentication', # Remove this now!!!
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ]
 }
+
 ```
 
 - this will also allow us post as well as give us functionality private.
 - now if you look at the following picture you should be able to add a new cat! via an api (using arc)
-    ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_create.png)
-
+    ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_rest_client_add_cat.png)
+Note: On post requests you need to add a traling slash to all requests (unless you specify otherwise in the settings!)
 
 ## Let's make our api Private!
 - we don't really care if people can see our cat types, but we don't want people to know our cat names!
 - let's make the cat types public, but let's make the cats private, where you need to login.
 - in your viewsets.py file you need to "include permissions" add the following line if you don't want to make it public
 ```python
-from rest_framework import viewsets, permissions
+# other imports ....
+from rest_framework import viewsets, permissions # we added the permissions!
 
 # ... other code
 class CatViewSet(viewsets.ModelViewSet):
@@ -437,18 +470,25 @@ class CatViewSet(viewsets.ModelViewSet):
 ```
 
 - now if you go to http://localhost:8000/v1/cats/ it'll show you that you don't have any credentials, and won't permit you yay!
-    - How can I test this? If you logout from the admin you should be able to
+    - How can I test this? Rest Client to the rescue.
+
+Note: If you want to learn more about permissions, you can go to the fantastic documentation here https://www.django-rest-framework.org/tutorial/4-authentication-and-permissions/
 
 ## I want to access my private stuff!
 - go to your advanced rest client, use the "POST" method and put in the login url (http://localhost:8000/v1/auth/token)
 - put in your credentials in the body (like we did the first time) and copy the key somewhere handy so you can copy it.
-    if you need a refresher see: ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_test_api_1.png)
+    if you need a refresher see: ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_rest_client_success.png)
 - now we're going to access our stuff via token authentication!
 - Use the "GET" method and enter the url "http://localhost:8000/v1/catapp/cats/"
 - in your advanced rest client select the "Headers" section
     - in the header name enter "Authorization"
     - in the header value enter "Token <your-super-private-key>"
-- it should look like the following: ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_arc_get_authenticated.png)
+- it should look like the following:
+    - Step 1 add the token:
+![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_rest_client_add_token.png)
+    - Step 2 Get the cats:
+![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_rest_client_cat_with_token.png)
+    - Step 3 Profit (and pet cats)
 
 ## Djoser we installed it, but we haven't used it yet
 - Djoser will allow you to sign up users and deal with all of the complications of doing that.
@@ -459,11 +499,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 - If you go to `http://localhost:8000/v1/auth/users/` you should be able to register a new user.
 - You can also go to the rest client and use the "POST" method to `http://localhost:8000/v1/auth/users/` with the following body:
 ```json
-    {
-        "email": "rick@rick.com",
-        "username": "rick",
-        "password": "temptemp"
-    }
+{
+    "email": "rick@rick.com",
+    "username": "rick",
+    "password": "temptemp"
+}
 ```
 
 - then you can login at `http://localhost:8000/v1/auth` with the body
