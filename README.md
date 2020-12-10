@@ -7,15 +7,17 @@ Creating an authenticated api from scratch, with django, django rest framework, 
 - a restful testing program, this is going to act as our client (more on that soon):
     - [Firefox rest client add on](https://addons.mozilla.org/en-CA/firefox/addon/restclient/)
     - [Chrome rest client add on](https://chrome.google.com/webstore/detail/rest-ape-advanced-api-tes/ohalacbnhbfllngjcgnejjdgmhbkcnld?hl=en)
+- I'm going to do this all in Ubuntu, so instructions will be a bit different but similar for mac and windows.
+    - On windows you'll need to use powershell, WSL (windows subsystem for linux)
+    - On Mac you'll need to use terminal or bash.
+
+### Knowledge that's nice to have but not necessary
 - git (if you want to clone the repo later.)
 - Some basic knowledge of django is great but it's alright if you don't. What do you need to know?
     - It's a web framework that you can serve small and large websites (how big? Instagram big).
-- I'm going to do this all in Ubuntu, so instructions will be a bit different but similar for mac and windows.
-    - On windows you'll need to use powershell, WSL (windows subsystem for linux)
-    - On Mac you'll need to use powershell 
 
 ## What are we going to do?
-- talk about restful apis
+- talk about restful apis and where to find othes.
 
 - the full shabang of building our api below.
    - create a django project
@@ -29,7 +31,6 @@ Creating an authenticated api from scratch, with django, django rest framework, 
    - Add a lot of data from an [opendata platform](https://www.kaggle.com/ma7555/cat-breeds-dataset) using management commands.
 
 ## What is a restful api, and who uses it?
-
 A RESTful api is basically a way to transfer information from a server (where you store information and do tasks) to a client. A client can be a mobile app, a website (loaded on your computer), games that store high scores or anything that will "consume" information.
 
 - If you want more information on this you take a look here.
@@ -37,6 +38,12 @@ A RESTful api is basically a way to transfer information from a server (where yo
 
 - Used by mobile apps, all website you go to, iot devices and much more!
 - Used by data scientists (and machine learning) professionals to get their data.
+
+- Here's some RESTful APIs that you folks can use in your own projects:
+    - [Awesome Public APIs](https://github.com/public-apis/public-apis): A list of public free APIs for your projects.
+    - [Google API Library](https://console.developers.google.com/apis/library): Want to do something fancy with computer vision or anything on the google cloud platform? You can use those APIs in that link.
+
+Note: We're essentially going to create one of these.
 
 ## What are the packages we're going to use and why are we going to use them.
 - we're going to be creating the api using the following packages:
@@ -49,8 +56,7 @@ A RESTful api is basically a way to transfer information from a server (where yo
         - this is going to handle our registration (through the api).
 
 ## Creating your environment
-
-The following is going to be in your terminal.
+The following is going to be in your terminal/powershell/wsl.
 
 - Create a folder for your project.
     - you could use `mkdir my-super-cool-project-lol`
@@ -63,6 +69,8 @@ The following is going to be in your terminal.
     - This is going to start your environment.
 3. `python3 -m pip install <package name>`
     - you're going to use this to install the packages needed.
+
+
 - if you're using pipenv (many of you won't so you can ignore the next two points)
 1. initialize your virtualenv with the following command
     `pipenv shell --python=3.7`
@@ -77,6 +85,7 @@ If you're totally stuck during the tutorial at any time you can do the following
 - Create your environment, and init initial (look above)
 - Install all the packages required.
     - `python3 -m pip install -r requirements.txt`
+- You'll need to do this in a completely separate folder/environment, if this is your first time through just ignore this note and come back later if you're stuck.
 
 ## Installing the packages.
 - Django installation:
@@ -85,13 +94,13 @@ If you're totally stuck during the tutorial at any time you can do the following
 - Django rest framework installation
     - `python3 -m pip install djangorestframework`
         - latest version.
-- django djoser
+- Django Djoser
     - `python3 -m pip install djoser`
-- django cors headers (so any client can access it.)
+- Django Cors Headers (so any client can access it.)
     - `python3 -m pip install django-cors-headers`
 
 ## Starting a django project
-- django has a set of command line programs to help you set up your project.
+- Django has a set of command line programs to help you set up your project.
     - if you type in django-admin in your shell then it should pop up with a bunch of options.
 - We're going to use the `django-admin.py startproject` to begin the project.
     - I'm calling mine zero_to_api. (eg. `django-admin.py startproject zero_to_api` if you want to do the same.)
@@ -110,8 +119,10 @@ If you're totally stuck during the tutorial at any time you can do the following
                 - as well it defines the apps (parts of our website) that are going to be used.
             - `wsgi.py`
                 - we're not going to worry about this today.
+                - For curious cats, this is how Django interfaces with webservers (More info [here](https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/))
         - `db.sqlite3`
             - this is going to be the database we're going to use for today.
+            - Note: This is only going to show up once you "migrate", we're looking at this next so it's going to pop up shortly.
 
 ## Getting started doing some django.
 - go into your project folder. Let's see if we can run django! in your terminal run
@@ -131,6 +142,8 @@ If you're totally stuck during the tutorial at any time you can do the following
     - `python manage.py migrate`
 
 - now if you run your local server (`python manage.py runserver`) you won't get any warnings.
+
+Note: You should be able to see `db.sqlite3` in your folder now too!
 
 ## Let's start adding configuring our apps (which are parts of our website).
 - Let's add the authentication which will add the login endpoints to our website (you'll see)
@@ -192,7 +205,7 @@ That's what you `urls.py` should look like!
 ```python
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.SessionAuthentication', # we're going to remove this
+        'rest_framework.authentication.SessionAuthentication', # we're going to remove this
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ]
@@ -227,7 +240,12 @@ REST_FRAMEWORK = {
 - let's open your rest client! I'm using the "Advanced Rest Client" plugin for chrome.
 - Comment out the line in your `settings.py` in your `REST_FRAMEWORK` object
 ```python
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'rest_framework.authentication.SessionAuthentication', # we're going to remove this
+        # ...other auth classes...
+    ]
+}
 ```
 - to walk you through this do the following steps.
 1. open your rest client
@@ -248,7 +266,9 @@ REST_FRAMEWORK = {
 5. press send, and you should see the key! You should see something like this.
 ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_rest_client_success.png)
 
-- What this key is used for is to login your user later on.
+- !IMPORTANT! What this key (or token) is used for is to login your user later on, keep it on hand!
+
+- You'll need to add the `'rest_framework.authentication.SessionAuthentication'` line whenever you access the admin (more on that later).
 
 ## Let's create an app (part of your website.) that requires authentication and we're going to make it accessible.
 - how do we do this?
@@ -297,6 +317,11 @@ class Cat(models.Model):
 
 ```
 
+- What are models you ask?
+    Models do a few things in Django:
+        - First generally maps to a single database table, the fields provide the "schema" (essentially structure) of that table.
+        - It also gives you a pythonic interface to add remove update and delete data in your database.
+
 Note: if you want to learn more about django models you can take a look here [Model docs](https://docs.djangoproject.com/en/3.1/topics/db/models/)
 
 ## Let's talk about migrations
@@ -309,6 +334,11 @@ Note: if you want to learn more about django models you can take a look here [Mo
     - python manage.py migrate
         - the output should look something like below
             ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_cats_apply_migrate.png)
+
+- What are Migrations you ask?
+    - Any changes in your models need to be reflected in your database tables (see Models as well)
+    - So "makemigrations" creates a special Django python file, that will create pending changes to our database (we can edit this too).
+    - Once we've done the above we execute "migrate" it's going to execute this file which will change our database (`db.sqlite3` for us if you're wondering)
 
 - Now that we have tables in our database, let's add them to the admin project so that we can add some data
     - go to the admin.py in your cats folder and modify it the following contents.
@@ -336,7 +366,6 @@ Note: If you want to learn more about the admin you can go look at the [admin do
 
 ## Let's create our restful api!
 - let's make it accessible, so that we can add cats from our client!
-
 
 ## let's make some serializers
 - In your `cats` Folder we're going to create a `serializers.py` file.
@@ -384,7 +413,6 @@ class CatViewSet(viewsets.ModelViewSet):
     serializer_class = CatSerializer
 ```
 
-
 ## let's hook it up to the urls with the django rest framework "router"
 - Let's hook it up to our urls so that we can use it!
     - create a `urls.py` file in your cats folder.
@@ -411,8 +439,8 @@ urlpatterns = router.urls
 
 ## What did I just do?
 - run your localserver and go to the following destinations in your browser you should see something crazy cool!
-    - `http://localhost:8000/v1/catapp/cats/`
-    - `http://localhost:8000/v1/catapp/cat-breeds/`
+    - http://localhost:8000/v1/catapp/cats/
+    - http://localhost:8000/v1/catapp/cat-breeds/
 - Congratulations you just created your first api!
 
 ## But wait there's more!
@@ -450,7 +478,7 @@ from rest_framework import viewsets, permissions # we added the permissions!
 
 # ... other code
 class CatViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated] # we added this line!
     queryset = Cat.objects.all()
     serializer_class = CatSerializer
 
@@ -546,3 +574,8 @@ This is essentially going to show you emails in your console, which is what we n
    - Add some javascript that can "consume" our api.
    - Deploy to heroku.
    - Add a lot of data from an [opendata platform](https://www.kaggle.com/ma7555/cat-breeds-dataset) using management commands.
+
+## Resources
+You're thinking to yourself, I can do this and I want to learn more. Here's some more resources that you can go check out.
+- [Django Girls Tutorial](https://tutorial.djangogirls.org/en/)
+
