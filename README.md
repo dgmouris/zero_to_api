@@ -435,7 +435,7 @@ router.register(r'cats', CatViewSet)
 
 urlpatterns = router.urls
 ```
-    This is going to add a bunch of paths to each url, a get, update, create, list and delete view of the items of your data in your remove
+This is going to add a bunch of paths to each url, a get, update, create, list and delete view of the items of your data in your remove
 - Now that we have our urls defined in our app we have to add it to the overall web project.
     - it's one line of code in the `zero_to_api/urls.py` file. the line is:
 ```python
