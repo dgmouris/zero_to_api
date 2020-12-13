@@ -301,7 +301,7 @@ INSTALLED_APPS = [
     - models are like tables in your database that you can manipulate with python.
     - We're going to create two models and add them.
         - Cat Breed
-        - Cats
+        - Cat
     - Here's what the models are going to look like.
 ```python
 from django.db import models
@@ -358,7 +358,7 @@ admin.site.register(Cat)
 admin.site.register(CatBreed)
 
 ```
-    This makes it so that you can add rows to your table via the admin.
+This makes it so that you can add rows (data) to your models (in this context read: database tables) via the admin.
 
 - now go back and run your server and login to the admin page (http://localhost:8000/admin/)
     - you should see `Cat` and `CatBreed` models included.
