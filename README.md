@@ -565,7 +565,8 @@ This is essentially going to show you emails in your console, which is what we n
 
 ## Conclusions
 - What have we done here?
-   - create a django project
+   - created and used a virtual environemnt.
+   - created a django project
    - added the django, djangorestframework, djoser, django-cors-headers packages
    - hooked up the authentication api and configured it to our web project.
    - created an app with models (and added them to the admin), serializers, views, urls,
