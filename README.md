@@ -300,7 +300,7 @@ INSTALLED_APPS = [
 - Now let's first add your models in the `models.py` in your cats folder (or what ever your created.)
     - models are like tables in your database that you can manipulate with python.
     - We're going to create two models and add them.
-        - Cat Types
+        - Cat Breed
         - Cats
     - Here's what the models are going to look like.
 ```python
