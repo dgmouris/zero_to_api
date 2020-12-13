@@ -1,6 +1,6 @@
 # Zero to api
 
-Creating an authenticated api from scratch, with django, django rest framework, and django rest auth.
+Creating an authenticated api from scratch, with django, django rest framework, and djoser.
 
 ## Prerequistes to follow the presentation
 - pipenv and installation of python 3.6+ 
