@@ -24,18 +24,19 @@ Creating an authenticated api from scratch, with django, django rest framework, 
     - Who uses it?
     - Some places where you can discover some more RESTful APIs for yourself.
 
-- the full shabang of building our api below.
-   - create a django project
+- the full shabang of building our RESTful api.
+   - create our environment and install the packages.
+   - create a django project in our environtment.
    - add the djangorestframework and djoser packages
    - hook up the authentication api and configure it to our web project.
    - create an app with models (and add them to the admin), serializers, views, urls (more on all of these later)
    - create a RESTful api for the app above and hook it up to our web project.
-- If we have time
+- If we have time we can discuss.
    - Add some javascript that can "consume" our api.
    - Deploy to heroku.
    - Add a lot of data from an [opendata platform](https://www.kaggle.com/ma7555/cat-breeds-dataset) using management commands.
 
-## What is a restful api, and who uses it?
+## The What, Why, Who of RESTful APIs.
 A RESTful api is basically a way to transfer information from a server (where you store information and do tasks) to a client. A client can be a mobile app, a website (loaded on your computer), games that store high scores or anything that will "consume" information.
 
 - If you want more information on this you take a look here.
@@ -53,7 +54,7 @@ Note: We're essentially going to create one of these.
 ## What are the packages we're going to use and why are we going to use them.
 - we're going to be creating the api using the following packages:
     - [Django](https://www.djangoproject.com)
-        - this is a web framework and an orm (Object Relationship Mapper) Basically just an sql interface
+        - this is a web framework and an orm (Object Relationship Mapper) which is basically just an sql interface (so creating tables, and read/write/update/delete from those tables as well).
     - [Django Rest Framework](https://www.django-rest-framework.org/)
         - this is going to allow us to really simplify the api creation process.
         - We're also going to use this for login with tokens as well.
@@ -242,7 +243,8 @@ REST_FRAMEWORK = {
         ![alt text](https://github.com/dgmouris/zero_to_api/blob/master/images/zero_to_api_users_success.png)
 
 ## Testing your api!
-- let's open your rest client! I'm using the "Advanced Rest Client" plugin for chrome.
+- let's open your rest client! I'm using the "Firefox Rest Client" add on.
+    Note if you don't have one of these please see the links in the "Prereqs section".
 - Comment out the line in your `settings.py` in your `REST_FRAMEWORK` object
 ```python
 REST_FRAMEWORK = {
