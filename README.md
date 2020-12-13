@@ -18,7 +18,11 @@ Creating an authenticated api from scratch, with django, django rest framework, 
     - It's a web framework that you can serve small and large websites (how big? Instagram big).
 
 ## What are we going to do?
-- talk about restful apis and where to find othes.
+- talk about restful api
+    - Why it's important?
+    - What is it?
+    - Who uses it?
+    - Some places where you can discover some more RESTful APIs for yourself.
 
 - the full shabang of building our api below.
    - create a django project
