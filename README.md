@@ -10,6 +10,7 @@ Creating an authenticated api from scratch, with django, django rest framework, 
 - I'm going to do this all in Ubuntu, so instructions will be a bit different but similar for mac and windows.
     - On windows you'll need to use powershell, WSL (windows subsystem for linux)
     - On Mac you'll need to use terminal or bash.
+    - If you're using VSCode then you should have a terminal built in.
 
 ### Knowledge that's nice to have but not necessary
 - git (if you want to clone the repo later.)
